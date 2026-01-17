@@ -1,13 +1,13 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.3")
+script_version("1.4")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
 
-local SCRIPT_VERSION = "1.3" 
+local SCRIPT_VERSION = "1.4" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -103,6 +103,7 @@ function cmd_badmins()
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
+
 
 
 
