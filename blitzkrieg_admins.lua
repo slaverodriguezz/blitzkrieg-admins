@@ -1,33 +1,22 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.0")
+script_version("1.1")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local http = require("socket.http")
 local ltn12 = require("ltn12")
 
-local SCRIPT_VERSION = "1.0"
-local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
+local SCRIPT_VERSION = "1.1"
+local SCRIPT_URL = "https://cdn.jsdelivr.net/gh/slaverodriguezz/blitzkrieg-admins/blitzkrieg_admins.lua"
+
 
 function checkForUpdates()
-    local url = SCRIPT_URL
     local response = {}
-    local body, code, headers = http.request{
-        url = url,
-        redirect = false, -- не идём за редиректом
+    local body, code = http.request{
+        url = SCRIPT_URL,
         sink = ltn12.sink.table(response)
     }
-
-    -- GitHub почти всегда отдаёт 301 со строкой Location
-    if (code == 301 or code == 302) and headers and headers.location then
-        url = headers.location
-        response = {}
-        body, code = http.request{
-            url = url,
-            sink = ltn12.sink.table(response)
-        }
-    end
 
     if code == 200 then
         local newScript = table.concat(response)
@@ -75,6 +64,7 @@ local admins = {
     ["Marco_Mazzini"] = 5,
     ["Edward_Thawne"] = 5,
     ["Mayu_Sakura"] = 5,
+    ["Tag_King"] = 5,
     ["Donatello_Ross"] = 5,
     ["Cody_Flatcher"] = 5,
     ["Carlo_Barbero"] = 5,
