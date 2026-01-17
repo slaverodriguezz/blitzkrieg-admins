@@ -1,6 +1,6 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.1")
+script_version("1.0")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
@@ -103,4 +103,5 @@ function cmd_badmins()
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
+
 
