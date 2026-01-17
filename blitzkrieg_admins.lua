@@ -11,15 +11,25 @@ local SCRIPT_VERSION = "1.0"
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 
 function checkForUpdates()
-    SCRIPT_URL = SCRIPT_URL:gsub("https://", "http://")
-
+    local url = SCRIPT_URL
     local response = {}
-    local _, status = http.request{
-        url = SCRIPT_URL,
+    local body, code, headers = http.request{
+        url = url,
+        redirect = false, -- не идём за редиректом
         sink = ltn12.sink.table(response)
     }
 
-    if status == 200 then
+    -- GitHub почти всегда отдаёт 301 со строкой Location
+    if (code == 301 or code == 302) and headers and headers.location then
+        url = headers.location
+        response = {}
+        body, code = http.request{
+            url = url,
+            sink = ltn12.sink.table(response)
+        }
+    end
+
+    if code == 200 then
         local newScript = table.concat(response)
         local newVersion = newScript:match('SCRIPT_VERSION%s*=%s*"([%d%.]+)"')
         if newVersion and newVersion ~= SCRIPT_VERSION then
@@ -31,7 +41,7 @@ function checkForUpdates()
             sampAddChatMessage("{3A4FFC}[blitzkrieg] No updates found.", -1)
         end
     else
-        sampAddChatMessage("{FF0000}[blitzkrieg] Update check failed. HTTP code: "..tostring(status), -1)
+        sampAddChatMessage("{FF0000}[blitzkrieg] Update check failed. HTTP code: "..tostring(code), -1)
     end
 end
 
