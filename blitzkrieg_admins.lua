@@ -4,19 +4,15 @@ script_version("1.0")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
-local requests = require("requests") -- библиотека с поддержкой HTTPS
+local requests = require("requests")
 
-----------------------------------------------------------
--- ⚙️ НАСТРОЙКИ
-----------------------------------------------------------
-local SCRIPT_VERSION = "1.0" -- меняй при каждом обновлении
+
+local SCRIPT_VERSION = "1.0" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
 
-----------------------------------------------------------
--- 🔄 АВТООБНОВЛЕНИЕ
-----------------------------------------------------------
+
 function checkForUpdates()
     local response = requests.get(SCRIPT_URL)
 
@@ -42,9 +38,7 @@ function checkForUpdates()
     end
 end
 
-----------------------------------------------------------
--- 🧍‍♂️ СПИСОК АДМИНОВ
-----------------------------------------------------------
+
 local admins = {
     ["Jonny_Wilson"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10,
     ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10, ["Impressive_Plitts"] = 5,
@@ -65,9 +59,7 @@ local admins = {
     ["Artem_Rosenberg"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
 }
 
-----------------------------------------------------------
--- 🧭 ОСНОВНАЯ ЛОГИКА
-----------------------------------------------------------
+
 function main()
     repeat wait(0) until isSampAvailable()
 
@@ -85,9 +77,7 @@ function main()
     wait(-1)
 end
 
-----------------------------------------------------------
--- 📜 ВЫВОД СПИСКА АДМИНОВ
-----------------------------------------------------------
+
 function cmd_badmins()
     local result = {}
     local playerCount = sampGetMaxPlayerId(false)
