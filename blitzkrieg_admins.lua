@@ -4,6 +4,37 @@ script_version("1.0")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
+local http = require("socket.http")
+local ltn12 = require("ltn12")
+
+local SCRIPT_VERSION = "1.0"
+local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
+
+function checkForUpdates()
+    local response = {}
+    local _, status = http.request{
+        url = SCRIPT_URL,
+        sink = ltn12.sink.table(response)
+    }
+
+    if status == 200 then
+        local newScript = table.concat(response)
+        local newVersion = newScript:match('SCRIPT_VERSION%s*=%s*"([%d%.]+)"')
+        if newVersion and newVersion ~= SCRIPT_VERSION then
+            local f = io.open("moonloader/blitzkrieg_admins.lua", "w+")
+            f:write(newScript)
+            f:close()
+            sampAddChatMessage("{00FF00}[blitzkrieg] Update downloaded! Restart SAMP to apply (new version: "..newVersion..")", -1)
+        else
+            sampAddChatMessage("{3A4FFC}[blitzkrieg] No updates found.", -1)
+        end
+    else
+        sampAddChatMessage("{FF0000}[blitzkrieg] Update check failed. HTTP code: "..tostring(status), -1)
+    end
+end
+
+
+
 local textColor = "{F5DEB3}"
 
 local admins = {
@@ -65,6 +96,10 @@ function main()
     repeat wait(0) until isSampAvailable()
     sampRegisterChatCommand("badmins", cmd_badmins)
     sampAddChatMessage("{3A4FFC}[blitzkrieg] {F5DEB3}admins checker loaded | author: {3A4FFC}slave_rodriguez", -1)
+
+    wait(5000)
+    checkForUpdates()
+
     wait(-1)
 end
 
@@ -90,6 +125,6 @@ function cmd_badmins()
             sampAddChatMessage(string.format("%s%s | ID: %d | Level: %d", textColor, admin.name, admin.id, admin.level), -1)
         end
     else
-        sampAddChatMessage("{FF0000}No admins online.", -1)
+        sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
