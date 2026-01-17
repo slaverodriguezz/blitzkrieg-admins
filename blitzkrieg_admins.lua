@@ -1,0 +1,95 @@
+script_name("blitzkrieg admins")
+script_author("slave_rodriguez")
+script_version("1.0")
+
+require "lib.moonloader"
+local sampev = require "lib.samp.events"
+local textColor = "{F5DEB3}"
+
+local admins = {
+    ["Jonny_Wilson"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10, ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10,
+    ["Impressive_Plitts"] = 5, ["Quentin_Qween"] = 10, ["Jayson_Frenks"] = 10, ["Danya_Korolyov"] = 10, ["Sergo_Cross"] = 10, ["Trojan_Dev"] = 10, ["Kostya_Vlasov"] = 10, ["Game_Birds"] = 10,
+    ["Aleksey_Efimenko"] = 5, ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8,
+    ["Homka_Daxwell"] = 5,
+    ["Fernando_Bennet"] = 6,
+    ["Egor_Ufimtsev"] = 6,
+    ["Daniel_Salaru"] = 6,
+    ["Wilion_Walker"] = 5,
+    ["Rikuto_Yashida"] = 5,
+    ["Aleksei_Kuznetcov"] = 5,
+    ["Anthony_Cerezo"] = 5,
+    ["Pabloz_Hernandezx"] = 5,
+    ["Niko_Filliams"] = 5,
+    ["Avgustique_Unhoped"] = 5,
+    ["Ramon_Morettie"] = 5,
+    ["Alessandro_Carrasco"] = 4,
+    ["Midzuki_Cerezo"] = 3,
+    ["Kwenyt_Joestar"] = 3,
+    ["Absolutely_Sawide"] = 4,
+    ["Oruto_Matsushima"] = 4,
+    ["Anthony_Morrow"] = 5,
+    ["Michael_Rojas"] = 6,
+    ["Marco_Mazzini"] = 5,
+    ["Edward_Thawne"] = 5,
+    ["Mayu_Sakura"] = 5,
+    ["Donatello_Ross"] = 5,
+    ["Cody_Flatcher"] = 5,
+    ["Carlo_Barbero"] = 5,
+    ["Ruslan_Satriano"] = 5,
+    ["Kennedy_Oldridge"] = 5,
+    ["Andrew_Sheredega"] = 5,
+    ["Jack_Gastro"] = 3,
+    ["Jesus_Rubin"] = 3,
+    ["Faust_Casso"] = 3,
+    ["Bobby_Shmurda"] = 3,
+    ["Yuliya_Ermak"] = 4,
+    ["Mickey_Marryman"] = 4,
+    ["Jayden_Henderson"] = 5,
+    ["Arteezy_Adalwolff"] = 5,
+    ["Mayson_Wilson"] = 5,
+    ["Denis_MacTavish"] = 5,
+    ["Laurent_Lemieux"] = 5,
+    ["Simon_Frolov"] = 5,
+    ["Dimentii_Lazarev"] = 5,
+    ["Jagermister_Orazov"] = 5,
+    ["Sandy_Blum"] = 5,
+    ["Yaroslav_Yarkin"] = 5,
+    ["Kira_Yukimura"] = 5,
+    ["Gracie_Ludvig"] = 5,
+    ["Artem_Rosenberg"] = 5,
+    ["Emmett_Hoggarth"] = 5,
+    ["Kasper_Whiter"] = 3
+}
+
+function main()
+    repeat wait(0) until isSampAvailable()
+    sampRegisterChatCommand("badmins", cmd_badmins)
+    sampAddChatMessage("{3A4FFC}[blitzkrieg] {F5DEB3}admins checker loaded | author: {3A4FFC}slave_rodriguez", -1)
+    wait(-1)
+end
+
+function cmd_badmins()
+    local result = {}
+    local playerCount = sampGetMaxPlayerId(false)
+    for i = 0, playerCount do
+        if sampIsPlayerConnected(i) then
+            local name = sampGetPlayerNickname(i)
+            if admins[name] then
+                table.insert(result, {name = name, id = i, level = admins[name]})
+            end
+        end
+    end
+
+    table.sort(result, function(a, b)
+        return a.level > b.level
+    end)
+
+    if #result > 0 then
+        sampAddChatMessage("{FFFF00}Admins online: {FFFFFF}" .. #result, -1)
+        for _, admin in ipairs(result) do
+            sampAddChatMessage(string.format("%s%s | ID: %d | Level: %d", textColor, admin.name, admin.id, admin.level), -1)
+        end
+    else
+        sampAddChatMessage("{FF0000}No admins online.", -1)
+    end
+end
