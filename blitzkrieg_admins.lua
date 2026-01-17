@@ -1,13 +1,13 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.2")
+script_version("1.3")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
 
-local SCRIPT_VERSION = "1.2" 
+local SCRIPT_VERSION = "1.3" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -40,7 +40,7 @@ end
 
 
 local admins = {
-    ["Jonny_Wilson"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10,
+    ["Jonny_Wilson"] = 10, ["BOT_Evolve"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10,
     ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10, ["Impressive_Plitts"] = 5,
     ["Quentin_Qween"] = 10, ["Jayson_Frenks"] = 10, ["Danya_Korolyov"] = 10, ["Sergo_Cross"] = 10,
     ["Trojan_Dev"] = 10, ["Kostya_Vlasov"] = 10, ["Game_Birds"] = 10, ["Aleksey_Efimenko"] = 5,
@@ -49,7 +49,7 @@ local admins = {
     ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Pabloz_Hernandezx"] = 5, ["Niko_Filliams"] = 5,
     ["Avgustique_Unhoped"] = 5, ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 4, ["Midzuki_Cerezo"] = 3,
     ["Kwenyt_Joestar"] = 3, ["Absolutely_Sawide"] = 4, ["Oruto_Matsushima"] = 4, ["Anthony_Morrow"] = 5,
-    ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 10, ["Mayu_Sakura"] = 5,
+    ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5,
     ["Donatello_Ross"] = 5, ["Cody_Flatcher"] = 5, ["Carlo_Barbero"] = 5, ["Ruslan_Satriano"] = 5,
     ["Kennedy_Oldridge"] = 5, ["Andrew_Sheredega"] = 5, ["Jack_Gastro"] = 3, ["Jesus_Rubin"] = 3,
     ["Faust_Casso"] = 3, ["Bobby_Shmurda"] = 3, ["Yuliya_Ermak"] = 4, ["Mickey_Marryman"] = 4,
@@ -103,6 +103,7 @@ function cmd_badmins()
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
+
 
 
 
