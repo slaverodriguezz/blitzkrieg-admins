@@ -1,13 +1,13 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.0")
+script_version("1.1")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local http = require("socket.http")
 local ltn12 = require("ltn12")
 
-local SCRIPT_VERSION = "1.0"
+local SCRIPT_VERSION = "1.1"
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 
 function checkForUpdates()
@@ -67,6 +67,7 @@ local admins = {
     ["Cody_Flatcher"] = 5,
     ["Carlo_Barbero"] = 5,
     ["Ruslan_Satriano"] = 5,
+    ["Tag_King"] = 5,
     ["Kennedy_Oldridge"] = 5,
     ["Andrew_Sheredega"] = 5,
     ["Jack_Gastro"] = 3,
@@ -128,3 +129,4 @@ function cmd_badmins()
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
+
