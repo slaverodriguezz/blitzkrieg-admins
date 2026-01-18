@@ -1,22 +1,41 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.9")
+script_version("2.0")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
-local imgui = require "imgui"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "1.9"
+local SCRIPT_VERSION = "2.0" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
+local textColor = "{F5DEB3}"
 
--- Переменные UI
-local showAdminWindow = false
-local searchQuery = imgui.ImBuffer(64)
-local mainColor = imgui.ImVec4(0.247, 0.216, 0.98, 1.0) -- #3F37FA
+function checkForUpdates()
+    local response = requests.get(SCRIPT_URL)
 
--- Список админов
+    if response and response.status_code == 200 then
+        local newScript = response.text
+        local newVersion = newScript:match('SCRIPT_VERSION%s*=%s*"([%d%.]+)"')
+
+        if newVersion and newVersion ~= SCRIPT_VERSION then
+            local f = io.open(SCRIPT_PATH, "w+")
+            if f then
+                f:write(newScript)
+                f:close()
+                sampAddChatMessage("{00FF00}[blitzkrieg] Update downloaded! Restart SAMP to apply (new version: " .. newVersion .. ")", -1)
+            else
+                sampAddChatMessage("{FF0000}[blitzkrieg] Failed to write new script version to disk: " .. SCRIPT_PATH, -1)
+            end
+        else
+            sampAddChatMessage("{3A4FFC}[blitzkrieg] No updates found. You are using the latest version (" .. SCRIPT_VERSION .. ")", -1)
+        end
+    else
+        local code = response and response.status_code or "nil"
+        sampAddChatMessage("{FF0000}[blitzkrieg] Update check failed. HTTP code: " .. tostring(code), -1)
+    end
+end
+
 local admins = {
     ["Jonny_Wilson"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10,
     ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10, ["Impressive_Plitts"] = 5,
@@ -37,102 +56,69 @@ local admins = {
     ["Artem_Rosenberg"] = 5, ["Lauren_Vandom"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
 }
 
--- Проверка обновлений
-function checkForUpdates()
-    local response = requests.get(SCRIPT_URL)
-    if response and response.status_code == 200 then
-        local newScript = response.text
-        local newVersion = newScript:match('SCRIPT_VERSION%s*=%s*"([%d%.]+)"')
-        if newVersion and newVersion ~= SCRIPT_VERSION then
-            local f = io.open(SCRIPT_PATH, "w+")
-            if f then
-                f:write(newScript)
-                f:close()
-                sampAddChatMessage("{00FF00}[blitzkrieg] Update downloaded! Restart SAMP to apply (new version: " .. newVersion .. ")", -1)
-            end
-        end
-    end
+function main()
+    repeat wait(0) until isSampAvailable()
+
+    sampRegisterChatCommand("badmins", cmd_badmins)
+    sampRegisterChatCommand("offadmins", cmd_offadmins)
+    sampRegisterChatCommand("update", function()
+        sampAddChatMessage("{3A4FFC}[blitzkrieg] Checking for updates...", -1)
+        checkForUpdates()
+    end)
+
+    sampAddChatMessage("{3A4FFC}[blitzkrieg] {F5DEB3}admins checker loaded | author: {3A4FFC}slave_rodriguez", -1)
+
+    wait(5000)
+    checkForUpdates()
+
+    wait(-1)
 end
 
--- Команда /badmins
 function cmd_badmins()
     local result = {}
-    local maxId = sampGetMaxPlayerId(false)
-    for i=0,maxId do
+    local playerCount = sampGetMaxPlayerId(false)
+    for i = 0, playerCount do
         if sampIsPlayerConnected(i) then
             local name = sampGetPlayerNickname(i)
             if admins[name] then
-                table.insert(result, {name=name, id=i, level=admins[name]})
+                table.insert(result, {name = name, id = i, level = admins[name]})
             end
         end
     end
-    table.sort(result, function(a,b) return a.level>b.level end)
-    if #result>0 then
-        sampAddChatMessage("{FFFF00}Admins online: "..#result, -1)
-        for _,a in ipairs(result) do
-            sampAddChatMessage(string.format("{F5DEB3}%s | ID: %d | Level: %d", a.name, a.id, a.level), -1)
+
+    table.sort(result, function(a, b)
+        return a.level > b.level
+    end)
+
+    if #result > 0 then
+        sampAddChatMessage("{FFFF00}Admins online: {FFFFFF}" .. #result, -1)
+        for _, admin in ipairs(result) do
+            sampAddChatMessage(string.format("%s%s | ID: %d | Level: %d", textColor, admin.name, admin.id, admin.level), -1)
         end
     else
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
 
--- MAIN
-function main()
-    repeat wait(0) until isSampAvailable()
-    sampRegisterChatCommand("badmins", cmd_badmins)
-    sampRegisterChatCommand("offadmins", function() showAdminWindow = not showAdminWindow end)
-    sampRegisterChatCommand("update", function()
-        sampAddChatMessage("{3A4FFC}[blitzkrieg] Checking for updates...", -1)
-        checkForUpdates()
+-- Новая команда /offadmins
+function cmd_offadmins()
+    local result = {}
+
+    -- Сортируем всех админов по уровню (от большего к меньшему)
+    for name, level in pairs(admins) do
+        table.insert(result, {name = name, level = level})
+    end
+
+    table.sort(result, function(a, b)
+        return a.level > b.level
     end)
-    sampAddChatMessage("{3A4FFC}[blitzkrieg] {F5DEB3}Admins checker loaded | author: {3A4FFC}slave_rodriguez", -1)
-    wait(5000)
-    checkForUpdates()
+
+    -- Формируем содержимое окна
+    local dialogText = ""
+    for _, admin in ipairs(result) do
+        dialogText = dialogText .. string.format("%s | Level: %d\n", admin.name, admin.level)
+    end
+
+    -- Показываем диалоговое окно
+    sampShowDialog(1234, "Blitzkrieg Admins List", dialogText, "Close", "", 0)
 end
-
--- Рендер IMGUI
-imgui.OnDrawFrame(function()
-    if not showAdminWindow then return end
-    imgui.SetNextWindowSize(imgui.ImVec2(520,500), imgui.Cond.FirstUseEver)
-    imgui.Begin("Blitzkrieg Admins", showAdminWindow, imgui.WindowFlags.NoCollapse)
-
-    imgui.TextColored(mainColor, "Blitzkrieg Admins List  v"..SCRIPT_VERSION)
-    imgui.Separator()
-
-    imgui.PushItemWidth(250)
-    imgui.InputTextWithHint("##search", "Search admin...", searchQuery, 64)
-    imgui.SameLine()
-    if imgui.Button("Clear") then searchQuery.v = "" end
-    imgui.PopItemWidth()
-
-    imgui.Spacing()
-    imgui.Columns(2, nil, true)
-    imgui.TextColored(mainColor, "Name")
-    imgui.NextColumn()
-    imgui.TextColored(mainColor, "Level")
-    imgui.NextColumn()
-    imgui.Separator()
-
-    local list = {}
-    for name,level in pairs(admins) do
-        if searchQuery.v=="" or name:lower():find(searchQuery.v:lower()) then
-            table.insert(list,{name=name,level=level})
-        end
-    end
-    table.sort(list,function(a,b) return a.level>b.level end)
-
-    for _,a in ipairs(list) do
-        imgui.Text(a.name)
-        imgui.NextColumn()
-        imgui.TextColored(mainColor, tostring(a.level))
-        imgui.NextColumn()
-    end
-
-    if #list==0 then
-        imgui.TextColored(imgui.ImVec4(1,0.4,0.4,1), "No admins found.")
-    end
-
-    imgui.Columns(1)
-    imgui.End()
-end)
