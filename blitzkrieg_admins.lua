@@ -1,17 +1,15 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("1.6")
+script_version("1.7")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-
-local SCRIPT_VERSION = "1.6" 
+local SCRIPT_VERSION = "1.7" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
-
 
 function checkForUpdates()
     local response = requests.get(SCRIPT_URL)
@@ -38,7 +36,6 @@ function checkForUpdates()
     end
 end
 
-
 local admins = {
     ["Jonny_Wilson"] = 10, ["Jeysen_Prado"] = 10, ["Maxim_Kudryavtsev"] = 10, ["Salvatore_Giordano"] = 10,
     ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10, ["Impressive_Plitts"] = 5,
@@ -59,11 +56,11 @@ local admins = {
     ["Artem_Rosenberg"] = 5, ["Lauren_Vandom"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
 }
 
-
 function main()
     repeat wait(0) until isSampAvailable()
 
     sampRegisterChatCommand("badmins", cmd_badmins)
+    sampRegisterChatCommand("offadmins", cmd_offadmins)
     sampRegisterChatCommand("update", function()
         sampAddChatMessage("{3A4FFC}[blitzkrieg] Checking for updates...", -1)
         checkForUpdates()
@@ -76,7 +73,6 @@ function main()
 
     wait(-1)
 end
-
 
 function cmd_badmins()
     local result = {}
@@ -103,6 +99,30 @@ function cmd_badmins()
         sampAddChatMessage("{FFFF00}No admins online.", -1)
     end
 end
+
+-- Новая команда /offadmins
+function cmd_offadmins()
+    local result = {}
+
+    -- Сортируем всех админов по уровню (от большего к меньшему)
+    for name, level in pairs(admins) do
+        table.insert(result, {name = name, level = level})
+    end
+
+    table.sort(result, function(a, b)
+        return a.level > b.level
+    end)
+
+    -- Формируем содержимое окна
+    local dialogText = ""
+    for _, admin in ipairs(result) do
+        dialogText = dialogText .. string.format("%s | Level: %d\n", admin.name, admin.level)
+    end
+
+    -- Показываем диалоговое окно
+    sampShowDialog(1234, "Blitzkrieg Admins List", dialogText, "Close", "", 0)
+end
+
 
 
 
