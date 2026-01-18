@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.1")
+script_version("2.2")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.1" 
+local SCRIPT_VERSION = "2.2" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -51,9 +51,9 @@ local admins = {
     ["Kennedy_Oldridge"] = 5, ["Andrew_Sheredega"] = 5, ["Jack_Gastro"] = 3, ["Jesus_Rubin"] = 3,
     ["Faust_Casso"] = 3, ["Bobby_Shmurda"] = 3, ["Yuliya_Ermak"] = 4, ["Mickey_Marryman"] = 4,
     ["Jayden_Henderson"] = 5, ["Arteezy_Adalwolff"] = 5, ["Mayson_Wilson"] = 5, ["Denis_MacTavish"] = 5,
-    ["Laurent_Lemieux"] = 5, ["Simon_Frolov"] = 5, ["Dimentii_Lazarev"] = 5, ["Jagermeister_Orazov"] = 5,
-    ["Sandy_Blum"] = 5, ["Yaroslav_Yarkin"] = 5, ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5,
-    ["Artem_Rosenberg"] = 5, ["Lauren_Vandom"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
+    ["Laurent_Lemieux"] = 5, ["Simon_Frolov"] = 5, ["Dimentii_Lazarev"] = 5, ["Sandy_Blum"] = 5, 
+    ["Yaroslav_Yarkin"] = 5, ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5, ["Artem_Rosenberg"] = 5, 
+    ["Lauren_Vandom"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
 }
 
 function main()
@@ -100,11 +100,9 @@ function cmd_badmins()
     end
 end
 
--- Новая команда /offadmins
 function cmd_offadmins()
     local result = {}
 
-    -- Сортируем всех админов по уровню (от большего к меньшему)
     for name, level in pairs(admins) do
         table.insert(result, {name = name, level = level})
     end
@@ -113,13 +111,12 @@ function cmd_offadmins()
         return a.level > b.level
     end)
 
-    -- Формируем содержимое окна
     local dialogText = ""
     for _, admin in ipairs(result) do
         dialogText = dialogText .. string.format("%s | Level: %d\n", admin.name, admin.level)
     end
 
-    -- Показываем диалоговое окно
-    sampShowDialog(1234, "Blitzkrieg Admins List", dialogText, "Close", "", 0)
+    sampShowDialog(1234, "blitzkrieg | admins list", dialogText, "Close", "", 0)
 end
+
 
