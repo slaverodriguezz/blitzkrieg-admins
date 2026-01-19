@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.4")
+script_version("2.5")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.4" 
+local SCRIPT_VERSION = "2.5" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -41,11 +41,11 @@ local admins = {
     ["Diego_Serrano"] = 10, ["Gosha_Fantom"] = 10, ["Tobey_Marshall"] = 10, ["Impressive_Plitts"] = 5,
     ["Quentin_Qween"] = 10, ["Jayson_Frenks"] = 10, ["Danya_Korolyov"] = 10, ["Sergo_Cross"] = 10,
     ["Trojan_Dev"] = 10, ["Kostya_Vlasov"] = 10, ["Game_Birds"] = 10, ["Aleksey_Efimenko"] = 7,
-    ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8, ["Homka_Daxwell"] = 5, ["Fernando_Bennet"] = 6,
+    ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8, ["Fernando_Bennet"] = 6,
     ["Egor_Ufimtsev"] = 6, ["Daniel_Salaru"] = 6, ["Wilion_Walker"] = 5, ["Rikuto_Yashida"] = 5,
-    ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Pabloz_Hernandezx"] = 5, ["Niko_Filliams"] = 5,
+    ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Niko_Filliams"] = 5,
     ["Avgustique_Unhoped"] = 5, ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 4, ["Midzuki_Cerezo"] = 3,
-    ["Kwenyt_Joestar"] = 3, ["Absolutely_Sawide"] = 4, ["Oruto_Matsushima"] = 4, ["Anthony_Morrow"] = 5,
+    ["Kwenyt_Joestar"] = 3, ["Absolutely_Sawide"] = 4, ["Oruto_Matsushima"] = 4,
     ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5,
     ["Donatello_Ross"] = 5, ["Cody_Flatcher"] = 5, ["Carlo_Barbero"] = 5, ["Ruslan_Satriano"] = 5,
     ["Kennedy_Oldridge"] = 5, ["Andrew_Sheredega"] = 5, ["Jack_Gastro"] = 3, ["Jesus_Rubin"] = 3,
@@ -53,7 +53,7 @@ local admins = {
     ["Jayden_Henderson"] = 5, ["Arteezy_Adalwolff"] = 5, ["Mayson_Wilson"] = 5, ["Denis_MacTavish"] = 5,
     ["Laurent_Lemieux"] = 5, ["Simon_Frolov"] = 5, ["Dimentii_Lazarev"] = 5, ["Sandy_Blum"] = 5, 
     ["Yaroslav_Yarkin"] = 5, ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5, ["Artem_Rosenberg"] = 5, 
-    ["Lauren_Vandom"] = 5, ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
+    ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
 }
 
 function main()
@@ -118,3 +118,4 @@ function cmd_offadmins()
 
     sampShowDialog(1234, "blitzkrieg | admins list", dialogText, "Close", "", 0)
 end
+
