@@ -3,7 +3,7 @@ local encoding = require 'encoding'
 encoding.default = 'CP1251'
 local u8 = encoding.UTF8
 
-local script_version = 3
+local script_version = 4
 local script_url = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_stream.lua"
 local script_path = thisScript().path
 
@@ -18,14 +18,14 @@ function main()
     
     checkUpdate()
 
-    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Чеккер загружен. v%d | Автор: {7B70FA}slave_rodriguez", mainColor, script_version), -1)
+    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Cheaters checker v%d loaded. | commands: /stream, /maxlvl, /sfc | author: {7B70FA}slave_rodriguez", mainColor, script_version), -1)
 
     sampRegisterChatCommand("maxlvl", function(arg)
         if #arg > 0 and tonumber(arg) then
             maxLevelLimit = tonumber(arg)
-            sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] Максимальный уровень: {FFFFFF}%d", mainColor, maxLevelLimit), -1)
+            sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] Max level: {FFFFFF}%d", mainColor, maxLevelLimit), -1)
         else
-            sampAddChatMessage(string.format(u8"{%s}[Ошибка] Используйте: /maxlvl [число]", errorColor), -1)
+            sampAddChatMessage(string.format(u8"{%s}[ERROR] Use: /maxlvl [number]", errorColor), -1)
         end
     end)
 
@@ -46,9 +46,9 @@ function main()
         end
         
         if #ids > 0 then
-            sampSendChat(string.format(u8"/fc Читеры: %s", table.concat(ids, " ")))
+            sampSendChat(string.format(u8"/fc Cheaters: %s", table.concat(ids, " ")))
         else
-            sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Читеров нет (или у всех твой клист).", mainColor), -1)
+            sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}No cheaters found.", mainColor), -1)
         end
     end)
 
@@ -56,7 +56,7 @@ function main()
         local _, myId = sampGetPlayerIdByCharHandle(PLAYER_PED)
         local myColor = sampGetPlayerColor(myId)
         
-        sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] Список читеров в зоне стрима [до %d уровня]", mainColor, maxLevelLimit), -1)
+        sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] List of cheater in stream zone [up to %d lvl]", mainColor, maxLevelLimit), -1)
         local count = 0
         
         for i = 0, 999 do
@@ -74,7 +74,7 @@ function main()
         end
         
         if count == 0 then 
-            sampAddChatMessage(string.format(u8"{%s}В зоне стрима нет подходящих игроков (кроме своих).", mainColor), -1) 
+            sampAddChatMessage(string.format(u8"{%s}No cheaters found.", mainColor), -1) 
         end
     end)
 
@@ -92,12 +92,12 @@ function checkUpdate()
                 local new_version = content:match("local script_version = (%d+)")
                 new_version = tonumber(new_version)
                 if new_version and new_version > script_version then
-                    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Найдено обновление v%d! Устанавливаю...", mainColor, new_version), -1)
+                    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Update is found v%d! Downloading...", mainColor, new_version), -1)
                     local new_file = io.open(script_path, "w")
                     if new_file then
                         new_file:write(content)
                         new_file:close()
-                        sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Обновлено! Нажми {7B70FA}Ctrl + R", mainColor), -1)
+                        sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Updated! Press {7B70FA}Ctrl + R", mainColor), -1)
                     end
                 end
                 os.remove(temp_path)
