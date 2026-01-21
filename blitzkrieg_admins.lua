@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.6")
+script_version("2.7")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.6" 
+local SCRIPT_VERSION = "2.7" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -103,59 +103,45 @@ end
 
 function cmd_offadmins()
     local result = {}
-
     for name, level in pairs(admins) do
         table.insert(result, {name = name, level = level})
     end
-
     table.sort(result, function(a, b)
         return a.level > b.level
     end)
-
     local dialogText = ""
     for _, admin in ipairs(result) do
         dialogText = dialogText .. string.format("%s | Level: %d\n", admin.name, admin.level)
     end
-
     sampShowDialog(1234, "blitzkrieg | admins list", dialogText, "Close", "", 0)
 end
 
 function cmd_fcadmins()
-    local result = {}
+    local onlineAdmins = {}
     local playerCount = sampGetMaxPlayerId(false)
     
     for i = 0, playerCount do
         if sampIsPlayerConnected(i) then
             local name = sampGetPlayerNickname(i)
             if admins[name] then
-                table.insert(result, string.format("%s[%d]", name, i))
+                table.insert(onlineAdmins, string.format("%s[%d]", name, i))
             end
         end
     end
 
-    if #result == 0 then
+    if #onlineAdmins == 0 then
         sampAddChatMessage("{FFFF00}[blitzkrieg] No admins online.", -1)
         return
     end
 
-    local prefix = "Admins online: "
-    local message = prefix
-    
-    for i, adminInfo in ipairs(result) do
-        if #message + #adminInfo + 2 > 125 then
-            sampSendChat("/fc " .. message)
-            message = adminInfo
-        else
-            if message == prefix then
-                message = message .. adminInfo
-            else
-                message = message .. ", " .. adminInfo
-            end
+    local currentBatch = {}
+    for i, adminStr in ipairs(onlineAdmins) do
+        table.insert(currentBatch, adminStr)
+        
+        if #currentBatch == 3 or i == #onlineAdmins then
+            local message = table.concat(currentBatch, ", ")
+            sampSendChat("/fc Admins online: " .. message)
+            currentBatch = {}
         end
     end
-
-    if message ~= "" then
-        sampSendChat("/fc " .. message)
-    end
 end
-
