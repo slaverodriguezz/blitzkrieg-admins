@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.5")
+script_version("2.6")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.5" 
+local SCRIPT_VERSION = "2.6" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -61,6 +61,7 @@ function main()
 
     sampRegisterChatCommand("badmins", cmd_badmins)
     sampRegisterChatCommand("offadmins", cmd_offadmins)
+    sampRegisterChatCommand("fcadmins", cmd_fcadmins)
     sampRegisterChatCommand("update", function()
         sampAddChatMessage("{3A4FFC}[blitzkrieg] Checking for updates...", -1)
         checkForUpdates()
@@ -117,5 +118,44 @@ function cmd_offadmins()
     end
 
     sampShowDialog(1234, "blitzkrieg | admins list", dialogText, "Close", "", 0)
+end
+
+function cmd_fcadmins()
+    local result = {}
+    local playerCount = sampGetMaxPlayerId(false)
+    
+    for i = 0, playerCount do
+        if sampIsPlayerConnected(i) then
+            local name = sampGetPlayerNickname(i)
+            if admins[name] then
+                table.insert(result, string.format("%s[%d]", name, i))
+            end
+        end
+    end
+
+    if #result == 0 then
+        sampAddChatMessage("{FFFF00}[blitzkrieg] No admins online.", -1)
+        return
+    end
+
+    local prefix = "Admins online: "
+    local message = prefix
+    
+    for i, adminInfo in ipairs(result) do
+        if #message + #adminInfo + 2 > 125 then
+            sampSendChat("/fc " .. message)
+            message = adminInfo
+        else
+            if message == prefix then
+                message = message .. adminInfo
+            else
+                message = message .. ", " .. adminInfo
+            end
+        end
+    end
+
+    if message ~= "" then
+        sampSendChat("/fc " .. message)
+    end
 end
 
