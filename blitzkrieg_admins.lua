@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.7")
+script_version("2.8")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.7" 
+local SCRIPT_VERSION = "2.8" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -44,7 +44,7 @@ local admins = {
     ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8, ["Fernando_Bennet"] = 6,
     ["Egor_Ufimtsev"] = 6, ["Daniel_Salaru"] = 6, ["Wilion_Walker"] = 5, ["Rikuto_Yashida"] = 5,
     ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Niko_Filliams"] = 5,
-    ["Avgustique_Unhoped"] = 5, ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 4, ["Midzuki_Cerezo"] = 3,
+    ["Avgustique_Unhoped"] = 5, ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 5, ["Midzuki_Cerezo"] = 3,
     ["Kwenyt_Joestar"] = 3, ["Absolutely_Sawide"] = 4, ["Oruto_Matsushima"] = 4,
     ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5,
     ["Donatello_Ross"] = 5, ["Cody_Flatcher"] = 5, ["Carlo_Barbero"] = 5, ["Ruslan_Satriano"] = 5,
@@ -117,31 +117,23 @@ function cmd_offadmins()
 end
 
 function cmd_fcadmins()
-    local onlineAdmins = {}
+    local adminIds = {}
     local playerCount = sampGetMaxPlayerId(false)
     
     for i = 0, playerCount do
         if sampIsPlayerConnected(i) then
             local name = sampGetPlayerNickname(i)
             if admins[name] then
-                table.insert(onlineAdmins, string.format("%s[%d]", name, i))
+                table.insert(adminIds, tostring(i))
             end
         end
     end
 
-    if #onlineAdmins == 0 then
+    if #adminIds == 0 then
         sampAddChatMessage("{FFFF00}[blitzkrieg] No admins online.", -1)
         return
     end
 
-    local currentBatch = {}
-    for i, adminStr in ipairs(onlineAdmins) do
-        table.insert(currentBatch, adminStr)
-        
-        if #currentBatch == 3 or i == #onlineAdmins then
-            local message = table.concat(currentBatch, ", ")
-            sampSendChat("/fc Admins online: " .. message)
-            currentBatch = {}
-        end
-    end
+    local allIds = table.concat(adminIds, ", ")
+    sampSendChat("/fc Admins online: " .. allIds)
 end
