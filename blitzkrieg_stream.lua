@@ -4,7 +4,7 @@ encoding.default = 'CP1251'
 local u8 = encoding.UTF8
 
 local script_version = 1
-local script_url = "https://raw.githubusercontent.com/ТВОЙ_НИК/РЕПОЗИТОРИЙ/main/stream.lua"
+local script_url = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_stream.lua"
 local script_path = thisScript().path
 
 local maxLevelLimit = 999
