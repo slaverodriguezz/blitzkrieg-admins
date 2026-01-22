@@ -1,9 +1,10 @@
 local samp = require 'lib.samp.events'
 local encoding = require 'encoding'
+local vkeys = require 'vkeys'
 encoding.default = 'CP1251'
 local u8 = encoding.UTF8
 
-local script_version = 4
+local script_version = 5
 local script_url = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_stream.lua"
 local script_path = thisScript().path
 
@@ -12,13 +13,18 @@ local mainColor = "7B70FA"
 local notmainColor = "FFFFFF"
 local errorColor = "FF0000"
 
+local showScreenList = false
+local screenPos = {x = 500, y = 500}
+local isDragging = false
+local font = renderCreateFont("Arial", 10, 5)
+
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
     while not isSampAvailable() do wait(100) end
     
     checkUpdate()
 
-    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Cheaters checker v%d loaded. | commands: /stream, /maxlvl, /sfc | author: {7B70FA}slave_rodriguez", mainColor, script_version), -1)
+    sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] {FFFFFF}Cheaters checker v%d loaded. | commands: /stream, /maxlvl, /sfc, /sstream | author: {7B70FA}slave_rodriguez", mainColor, script_version), -1)
 
     sampRegisterChatCommand("maxlvl", function(arg)
         if #arg > 0 and tonumber(arg) then
@@ -78,7 +84,70 @@ function main()
         end
     end)
 
-    wait(-1)
+    sampRegisterChatCommand("sstream", function()
+        showScreenList = not showScreenList
+        local status = showScreenList and "{00FF00}ON" or "{FF0000}OFF"
+        sampAddChatMessage(string.format(u8"{%s}[blitzkrieg] Screen list: %s", mainColor, status), -1)
+    end)
+
+    while true do
+        wait(0)
+        if showScreenList then
+            drawCheatersList()
+            handleDragging()
+        end
+    end
+end
+
+function drawCheatersList()
+    local _, myId = sampGetPlayerIdByCharHandle(PLAYER_PED)
+    local myColor = sampGetPlayerColor(myId)
+    local yOffset = 0
+    
+    renderFontDrawText(font, string.format("Stream List (Max Lvl: %d)", maxLevelLimit), screenPos.x, screenPos.y, 0xFF7B70FA)
+    yOffset = yOffset + 15
+
+    local count = 0
+    for i = 0, 999 do
+        local result, ped = sampGetCharHandleBySampPlayerId(i)
+        if result and doesCharExist(ped) and i ~= myId then
+            local level = sampGetPlayerScore(i)
+            local playerColor = sampGetPlayerColor(i)
+            
+            if level <= maxLevelLimit and playerColor ~= myColor then
+                local nick = sampGetPlayerNickname(i)
+                local text = string.format("%s[%d] | Lvl: %d", nick, i, level)
+                local renderCol = bit.or(bit.band(playerColor, 0xFFFFFF), 0xFF000000)
+                
+                renderFontDrawText(font, text, screenPos.x, screenPos.y + yOffset, renderCol)
+                yOffset = yOffset + 15
+                count = count + 1
+            end
+        end
+    end
+
+    if count == 0 then
+        renderFontDrawText(font, "No targets found", screenPos.x, screenPos.y + yOffset, 0xFFFFFFFF)
+    end
+end
+
+function handleDragging()
+    if isCursorActive() then
+        local cX, cY = getCursorPos()
+        if isKeyDown(vkeys.VK_LBUTTON) then
+            -- Если нажали в районе заголовка
+            if cX >= screenPos.x and cX <= screenPos.x + 150 and cY >= screenPos.y and cY <= screenPos.y + 20 then
+                isDragging = true
+            end
+            
+            if isDragging then
+                screenPos.x = cX - 10
+                screenPos.y = cY - 5
+            end
+        else
+            isDragging = false
+        end
+    end
 end
 
 function checkUpdate()
