@@ -1,10 +1,9 @@
 local samp = require 'lib.samp.events'
 local encoding = require 'encoding'
-local vkeys = require 'vkeys'
 encoding.default = 'CP1251'
 local u8 = encoding.UTF8
 
-local script_version = 6
+local script_version = 7
 local script_url = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_stream.lua"
 local script_path = thisScript().path
 
@@ -16,7 +15,7 @@ local errorColor = "FF0000"
 local showScreenList = false
 local screenPos = {x = 500, y = 500}
 local isDragging = false
-local font = renderCreateFont("Arial", 10, 5)
+local font = renderCreateFont("Arial", 10, 5) 
 
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
@@ -48,7 +47,7 @@ function main()
             end
         end
         if #ids > 0 then sampSendChat(string.format("/fc Cheaters: %s", table.concat(ids, " ")))
-        else sampAddChatMessage(u8"Никого не найдено", -1) end
+        else sampAddChatMessage(u8"{7B70FA}[blitzkrieg] {FFFFFF}Никого не найдено", -1) end
     end)
 
     sampRegisterChatCommand("stream", function()
@@ -73,14 +72,13 @@ function main()
         sampAddChatMessage(u8"{7B70FA}[blitzkrieg] {FFFFFF}Экранный список: " .. (showScreenList and "{00FF00}ВКЛ" or "{FF0000}ВЫКЛ"), -1)
     end)
 
-    addEventHandler("onDrawFrame", function()
+    while true do
+        wait(0)
         if showScreenList then
             drawList()
             handleDragging()
         end
-    end)
-
-    wait(-1)
+    end
 end
 
 function drawList()
@@ -98,8 +96,8 @@ function drawList()
             local pCol = sampGetPlayerColor(i)
             if level <= maxLevelLimit and pCol ~= myColor then
                 local nick = sampGetPlayerNickname(i)
-                local color = bit.or(bit.band(pCol, 0xFFFFFF), 0xFF000000)
-                renderFontDrawText(font, string.format("%s[%d] | Lvl: %d", nick, i, level), screenPos.x, y, color)
+                local renderColor = bit.or(bit.band(pCol, 0xFFFFFF), 0xFF000000) 
+                renderFontDrawText(font, string.format("%s[%d] | Lvl: %d", nick, i, level), screenPos.x, y, renderColor)
                 y = y + 15
             end
         end
@@ -109,12 +107,13 @@ end
 function handleDragging()
     if isSampAvailable() and sampIsCursorActive() then
         local cX, cY = getCursorPos()
-        if isKeyDown(0x01) then
+        if isKeyDown(0x01) then 
             if not isDragging and cX >= screenPos.x and cX <= screenPos.x + 150 and cY >= screenPos.y and cY <= screenPos.y + 20 then
                 isDragging = true
             end
             if isDragging then
-                screenPos.x, screenPos.y = cX - 75, cY - 10
+                screenPos.x = cX - 75
+                screenPos.y = cY - 10
             end
         else
             isDragging = false
@@ -136,7 +135,7 @@ function checkUpdate()
                     if new_file then
                         new_file:write(content)
                         new_file:close()
-                        sampAddChatMessage(u8"{7B70FA}[blitzkrieg] {FFFFFF}Обновлено! Нажмите Ctrl+R", -1)
+                        sampAddChatMessage(u8"{7B70FA}[blitzkrieg] {FFFFFF}Обновлено! Перезагрузите скрипты (Ctrl+R)", -1)
                     end
                 end
                 os.remove(temp_path)
