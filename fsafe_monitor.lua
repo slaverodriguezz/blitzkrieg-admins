@@ -38,7 +38,6 @@ function main()
         if weapon and ammo then
             weapon = weapon:lower()
             if mainIni.safe[weapon] ~= nil or weapon == "ri" or weapon == "ak" then
-                if weapon == "ri" then weapon = "ri" end
                 mainIni.safe[weapon] = tonumber(ammo)
                 inicfg.save(mainIni, config_path)
                 sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated " .. weapon, -1)
@@ -72,32 +71,37 @@ function main()
 end
 
 function checkUpdate()
-    local path = getWorkingDirectory() .. "\\fsafe_v.txt"
-    downloadUrlToFile(url_version, path, function(id, status, p1, p2)
+    local version_file = os.getenv("TEMP") .. "\\fsafe_v.txt"
+    downloadUrlToFile(url_version, version_file, function(id, status, p1, p2)
         if status == 6 then
-            local f = io.open(path, "r")
+            local f = io.open(version_file, "r")
             if f then
                 local content = f:read("*a")
                 f:close()
-                os.remove(path)
+                os.remove(version_file)
                 local new_version = tonumber(content:match("%d+"))
                 if new_version and new_version > script_version then
-                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Update found! Downloading...", -1)
-                    local script_path = thisScript().path
-                    local update_path = script_path .. ".new"
-                    downloadUrlToFile(url_script, update_path, function(id2, status2, p12, p22)
+                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Downloading...", -1)
+                    
+                    local update_temp_file = os.getenv("TEMP") .. "\\fsafe_update.lua"
+                    downloadUrlToFile(url_script, update_temp_file, function(id2, status2, p12, p22)
                         if status2 == 6 then
-                            local up = io.open(update_path, "rb")
-                            local new_code = up:read("*a")
-                            up:close()
-                            os.remove(update_path)
-                            
-                            local main_f = io.open(script_path, "wb")
-                            main_f:write(new_code)
-                            main_f:close()
-                            
-                            sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated to v" .. new_version .. ". Reloading...", -1)
-                            thisScript():reload()
+                            local up = io.open(update_temp_file, "rb")
+                            if up then
+                                local new_code = up:read("*a")
+                                up:close()
+                                os.remove(update_temp_file)
+                                
+                                local main_f = io.open(thisScript().path, "wb")
+                                if main_f then
+                                    main_f:write(new_code)
+                                    main_f:close()
+                                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Update successful! Reloading...", -1)
+                                    thisScript():reload()
+                                else
+                                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Error: Cannot write to script file.", -1)
+                                end
+                            end
                         end
                     end)
                 end
