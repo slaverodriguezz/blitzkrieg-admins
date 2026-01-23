@@ -2,8 +2,8 @@ local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
 local script_version = 3
-local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/version.txt" 
-local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/fsafe_monitor.lua"
+local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/version.txt" 
+local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
 
 local config_path = "moonloader//config//fsafe_stats.ini"
 local mainIni = inicfg.load({
