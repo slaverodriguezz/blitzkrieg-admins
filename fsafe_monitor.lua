@@ -1,7 +1,7 @@
 local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
-local script_version = 3
+local script_version = 4
 local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
 local script_path = thisScript().path
 
@@ -17,6 +17,7 @@ local isDragging = false
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
     while not isSampAvailable() do wait(100) end
+    sampAddChatMessage("{7B70FA}[blitzkrieg safe] {FFFFFF}loaded. | commands: /fsafeset, /fsafereset, /fsafemon | author: {7B70FA}slave_rodriguez", -1)
     
     checkUpdate()
     
@@ -102,16 +103,35 @@ function samp.onServerMessage(color, text)
     local clean = text:gsub("{%x%x%x%x%x%x}", ""):gsub("%%", "%%%%") 
     local low = clean:lower()
     
-    local ammo = clean:match(":%s+(%d+)")
-    if ammo then
-        local val = tonumber(ammo)
-        if not low:find("объявление") and not low:find("тел:") and not low:find("news") then
-            if low:find("deagle") then mainIni.safe.de = val
-            elseif low:find("m4") then mainIni.safe.m4 = val
-            elseif low:find("ak") then mainIni.safe.ak = val
-            elseif low:find("rifle") then mainIni.safe.ri = val
+    if low:find("объявление") or low:find("тел:") or low:find("news") then return end
+
+    local ammoTotal = clean:match(":%s+(%d+)")
+    if ammoTotal then
+        local val = tonumber(ammoTotal)
+        if low:find("deagle") then mainIni.safe.de = val
+        elseif low:find("m4") then mainIni.safe.m4 = val
+        elseif low:find("ak") then mainIni.safe.ak = val
+        elseif low:find("rifle") then mainIni.safe.ri = val
+        end
+        inicfg.save(mainIni, config_path)
+        return 
+    end
+
+    if low:find("\235\238\230\232\235") then 
+        local _, myId = sampGetPlayerIdByCharHandle(PLAYER_PED)
+        local myName = sampGetPlayerNickname(myId)
+        
+        if not clean:find(myName) then
+            local putAmmo = clean:match("(%d+)")
+            if putAmmo then
+                local val = tonumber(putAmmo)
+                if low:find("deagle") then mainIni.safe.de = mainIni.safe.de + val
+                elseif low:find("m4") then mainIni.safe.m4 = mainIni.safe.m4 + val
+                elseif low:find("ak") then mainIni.safe.ak = mainIni.safe.ak + val
+                elseif low:find("rifle") then mainIni.safe.ri = mainIni.safe.ri + val
+                end
+                inicfg.save(mainIni, config_path)
             end
-            inicfg.save(mainIni, config_path)
         end
     end
 end
