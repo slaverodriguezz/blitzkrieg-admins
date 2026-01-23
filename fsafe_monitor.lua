@@ -1,7 +1,7 @@
 local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
-local script_version = 4
+local script_version = 5
 local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
 local script_path = thisScript().path
 
