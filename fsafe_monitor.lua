@@ -1,9 +1,9 @@
 local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
-local script_version = 1.0
-local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/version.txt"
-local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
+local script_version = 1.0 
+local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/version.txt" 
+local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/fsafe_monitor.lua"
 
 local config_path = "moonloader//config//fsafe_stats.ini"
 local mainIni = inicfg.load({
@@ -13,6 +13,15 @@ local mainIni = inicfg.load({
 
 local font = renderCreateFont("Arial", 9, 12)
 local isDragging = false
+
+local function u8(str)
+    return str:gsub('..', function(cc)
+        local code = {
+            ['\208\144'] = '\192', ['\208\145'] = '\193', ['\208\146'] = '\194', ['\208\147'] = '\195', ['\208\148'] = '\196', ['\208\149'] = '\197', ['\208\150'] = '\198', ['\208\151'] = '\199', ['\208\152'] = '\200', ['\208\153'] = '\201', ['\208\154'] = '\202', ['\208\155'] = '\203', ['\208\156'] = '\204', ['\208\157'] = '\205', ['\208\158'] = '\206', ['\208\159'] = '\207', ['\208\160'] = '\208', ['\208\161'] = '\209', ['\208\162'] = '\210', ['\208\163'] = '\211', ['\208\164'] = '\212', ['\208\165'] = '\213', ['\208\166'] = '\214', ['\208\167'] = '\215', ['\208\168'] = '\216', ['\208\169'] = '\217', ['\208\170'] = '\218', ['\208\171'] = '\219', ['\208\172'] = '\220', ['\208\173'] = '\221', ['\208\174'] = '\222', ['\208\175'] = '\223', ['\208\176'] = '\224', ['\208\177'] = '\225', ['\208\178'] = '\226', ['\208\179'] = '\227', ['\208\180'] = '\228', ['\208\181'] = '\229', ['\208\182'] = '\230', ['\208\183'] = '\231', ['\208\184'] = '\232', ['\208\185'] = '\233', ['\208\186'] = '\234', ['\208\187'] = '\235', ['\208\188'] = '\236', ['\208\189'] = '\237', ['\208\190'] = '\238', ['\208\191'] = '\239', ['\209\128'] = '\240', ['\209\129'] = '\241', ['\209\130'] = '\242', ['\209\131'] = '\243', ['\209\132'] = '\244', ['\209\133'] = '\245', ['\209\134'] = '\246', ['\209\135'] = '\247', ['\209\136'] = '\248', ['\209\137'] = '\249', ['\209\138'] = '\250', ['\209\139'] = '\251', ['\209\140'] = '\252', ['\209\141'] = '\253', ['\209\142'] = '\254', ['\209\143'] = '\255', ['\208\129'] = '\168', ['\209\145'] = '\184'
+        }
+        return code[cc] or cc
+    end)
+end
 
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
@@ -24,14 +33,14 @@ function main()
 
     sampRegisterChatCommand("fsafemon", function()
         showLogs = not showLogs
-        local status = showLogs and "{32CD32}ВКЛЮЧЕНО" or "{FF4500}ВЫКЛЮЧЕНО"
-        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Отображение логов: " .. status, -1)
+        local status = showLogs and "{32CD32}" .. u8("ВКЛЮЧЕНО") or "{FF4500}" .. u8("ВЫКЛЮЧЕНО")
+        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}" .. u8("Отображение: ") .. status, -1)
     end)
     
     sampRegisterChatCommand("fsafereset", function()
         mainIni.safe.de, mainIni.safe.m4, mainIni.safe.ak, mainIni.safe.ri = 0, 0, 0, 0
         inicfg.save(mainIni, config_path)
-        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Все показатели сброшены.", -1)
+        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}" .. u8("Все показатели сброшены."), -1)
     end)
 
     sampRegisterChatCommand("fsafeset", function(arg)
@@ -47,16 +56,16 @@ function main()
             end
             if found then
                 inicfg.save(mainIni, config_path)
-                sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Обновлено: " .. weapon .. " = " .. ammo, -1)
+                sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}" .. u8("Обновлено: ") .. weapon .. " = " .. ammo, -1)
             else
-                sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Ошибка! Используйте: de, m4, ak, ri", -1)
+                sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}" .. u8("Ошибка! Типы: de, m4, ak, ri"), -1)
             end
         else
-            sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Пример: /fsafeset {de, m4, ak, ri} {кол-во патронов}", -1)
+            sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}" .. u8("Пример: /fsafeset de 100"), -1)
         end
     end)
 
-    sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Скрипт v" .. script_version .. " запущен. Автор: {7B70FA}slave_rodriguez", -1)
+    sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}v" .. script_version .. u8(" запущен. Автор: ") .. "{7B70FA}slave_rodriguez", -1)
 
     while true do
         wait(0)
@@ -76,10 +85,7 @@ function main()
                         mainIni.settings.posX, mainIni.settings.posY = mx - 50, my - 30
                     end
                 else
-                    if isDragging then
-                        isDragging = false
-                        inicfg.save(mainIni, config_path)
-                    end
+                    if isDragging then isDragging = false inicfg.save(mainIni, config_path) end
                 end
             end
         end
@@ -97,10 +103,10 @@ function checkUpdate()
                 os.remove(temp_path)
                 local new_version = tonumber(content)
                 if new_version and new_version > script_version then
-                    sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Найдено обновление до v" .. new_version .. ". Загрузка...", -1)
+                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}" .. u8("Найдено обновление v") .. new_version .. u8(". Загрузка..."), -1)
                     downloadUrlToFile(url_script, thisScript().path, function(id, status, p1, p2)
                         if status == 6 then
-                            sampAddChatMessage("{7B70FA}[blitzkrieg fsafe monitoring] {FFFFFF}Обновление завершено! Перезагрузка...", -1)
+                            sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}" .. u8("Обновлено! Перезагрузка..."), -1)
                             thisScript():reload()
                         end
                     end)
