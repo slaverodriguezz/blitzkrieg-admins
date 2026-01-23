@@ -2,8 +2,8 @@ local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
 local script_version = 3
-local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/version.txt" 
 local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
+local script_path = thisScript().path
 
 local config_path = "moonloader//config//fsafe_stats.ini"
 local mainIni = inicfg.load({
@@ -37,7 +37,7 @@ function main()
         local weapon, ammo = arg:match("^(%w+)%s+(%d+)$")
         if weapon and ammo then
             weapon = weapon:lower()
-            if mainIni.safe[weapon] ~= nil or weapon == "ri" or weapon == "ak" then
+            if mainIni.safe[weapon] ~= nil then
                 mainIni.safe[weapon] = tonumber(ammo)
                 inicfg.save(mainIni, config_path)
                 sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated " .. weapon, -1)
@@ -71,40 +71,28 @@ function main()
 end
 
 function checkUpdate()
-    local version_file = os.getenv("TEMP") .. "\\fsafe_v.txt"
-    downloadUrlToFile(url_version, version_file, function(id, status, p1, p2)
+    local temp_path = os.getenv("TEMP") .. "\\temp_fsafe.lua"
+    downloadUrlToFile(url_script, temp_path, function(id, status, p1, p2)
         if status == 6 then
-            local f = io.open(version_file, "r")
+            local f = io.open(temp_path, "r")
             if f then
                 local content = f:read("*a")
                 f:close()
-                os.remove(version_file)
-                local new_version = tonumber(content:match("%d+"))
+                
+                local new_version = content:match("local script_version = (%d+)")
+                new_version = tonumber(new_version)
+                
                 if new_version and new_version > script_version then
-                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Downloading...", -1)
-                    
-                    local update_temp_file = os.getenv("TEMP") .. "\\fsafe_update.lua"
-                    downloadUrlToFile(url_script, update_temp_file, function(id2, status2, p12, p22)
-                        if status2 == 6 then
-                            local up = io.open(update_temp_file, "rb")
-                            if up then
-                                local new_code = up:read("*a")
-                                up:close()
-                                os.remove(update_temp_file)
-                                
-                                local main_f = io.open(thisScript().path, "wb")
-                                if main_f then
-                                    main_f:write(new_code)
-                                    main_f:close()
-                                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Update successful! Reloading...", -1)
-                                    thisScript():reload()
-                                else
-                                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Error: Cannot write to script file.", -1)
-                                end
-                            end
-                        end
-                    end)
+                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Updating...", -1)
+                    local new_file = io.open(script_path, "w")
+                    if new_file then
+                        new_file:write(content)
+                        new_file:close()
+                        sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated! Reloading...", -1)
+                        thisScript():reload()
+                    end
                 end
+                os.remove(temp_path)
             end
         end
     end)
