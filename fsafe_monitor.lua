@@ -1,4 +1,4 @@
-ocal samp = require 'lib.samp.events'
+local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
 local script_version = 5
