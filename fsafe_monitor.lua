@@ -1,7 +1,7 @@
 local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
-local script_version = 7
+local script_version = 8
 local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
 local script_path = thisScript().path
 
@@ -17,7 +17,7 @@ local isDragging = false
 function main()
     if not isSampLoaded() or not isSampfuncsLoaded() then return end
     while not isSampAvailable() do wait(100) end
-    sampAddChatMessage("{7B70FA}[blitzkrieg safe] {FFFFFF}loaded. | Commands: /fsafeset, /fsafereset, /fsafemon | Author: {7B70FA}slave_rodriguez", -1)
+    sampAddChatMessage("{7B70FA}[blitzkrieg safe] {FFFFFF}loaded. | Commands: /fsafeset, /fsafereset, /fsafemon | author: {7B70FA}slave_rodriguez", -1)
     
     checkUpdate()
     
