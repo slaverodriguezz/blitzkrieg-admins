@@ -2,8 +2,8 @@ local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
 local script_version = 3
-local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/version.txt" 
-local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/fsafe_monitor.lua"
+local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/version.txt" 
+local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/fsafe_monitor.lua"
 
 local config_path = "moonloader//config//fsafe_stats.ini"
 local mainIni = inicfg.load({
@@ -31,7 +31,7 @@ function main()
     sampRegisterChatCommand("fsafereset", function()
         mainIni.safe.de, mainIni.safe.m4, mainIni.safe.ak, mainIni.safe.ri = 0, 0, 0, 0
         inicfg.save(mainIni, config_path)
-        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}All safe logs have been reset.", -1)
+        sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}All logs reset.", -1)
     end)
 
     sampRegisterChatCommand("fsafeset", function(arg)
@@ -56,7 +56,7 @@ function main()
         end
     end)
 
-    sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}v" .. script_version .. " loaded. Commands: /fsafemon, /fsafeset, /fsafereset", -1)
+    sampAddChatMessage("{7B70FA}[blitzkrieg fsafe] {FFFFFF}v" .. script_version .. " loaded. Author: {7B70FA}slave_rodriguez", -1)
 
     while true do
         wait(0)
@@ -84,7 +84,7 @@ function main()
 end
 
 function checkUpdate()
-    local temp_path = getWorkingDirectory() .. "\\fsafe_temp.txt"
+    local temp_path = os.getenv("TEMP") .. "\\fsafe_ver.txt"
     downloadUrlToFile(url_version, temp_path, function(id, status, p1, p2)
         if status == 6 then
             local f = io.open(temp_path, "r")
@@ -94,21 +94,20 @@ function checkUpdate()
                 os.remove(temp_path)
                 local new_version = tonumber(content:match("%d+"))
                 if new_version and new_version > script_version then
-                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Updating...", -1)
+                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Downloading...", -1)
                     
-                    local update_file = getWorkingDirectory() .. "\\fsafe_update.lua"
-                    downloadUrlToFile(url_script, update_file, function(id2, status2, p12, p22)
+                    local update_tmp = thisScript().path .. ".tmp"
+                    downloadUrlToFile(url_script, update_tmp, function(id2, status2, p12, p22)
                         if status2 == 6 then
-                            local old_file = thisScript().path
-                            local f_update = io.open(update_file, "r")
-                            local content_update = f_update:read("*a")
-                            f_update:close()
+                            local f_new = io.open(update_tmp, "rb")
+                            local new_code = f_new:read("*a")
+                            f_new:close()
                             
-                            local f_main = io.open(old_file, "w")
-                            f_main:write(content_update)
+                            local f_main = io.open(thisScript().path, "wb")
+                            f_main:write(new_code)
                             f_main:close()
                             
-                            os.remove(update_file)
+                            os.remove(update_tmp)
                             sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Update successful! Reloading...", -1)
                             thisScript():reload()
                         end
@@ -123,7 +122,7 @@ function samp.onServerMessage(color, text)
     local clean = text:gsub("{%x%x%x%x%x%x}", ""):gsub("%%", "%%%%") 
     local low = clean:lower()
     
-    if (low:find("safe") or low:find("сейф") or low:find("осталось")) and not low:find("news") and not low:find("ad") then
+    if (low:find("сейф") or low:find("осталось")) and not low:find("объявление") and not low:find("тел:") then
         local ammo = clean:match(":%s+(%d+)")
         if ammo then
             local val = tonumber(ammo)
