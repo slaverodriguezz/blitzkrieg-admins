@@ -1,7 +1,7 @@
 local samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
-local script_version = 2
+local script_version = 3
 local url_version = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/version.txt" 
 local url_script = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg_admins/main/fsafe_monitor.lua"
 
@@ -114,14 +114,18 @@ end
 function samp.onServerMessage(color, text)
     local clean = text:gsub("{%x%x%x%x%x%x}", ""):gsub("%%", "%%%%") 
     local low = clean:lower()
-    local ammo = clean:match(":%s+(%d+)")
-    if ammo then
-        local val = tonumber(ammo)
-        if low:find("deagle") then mainIni.safe.de = val
-        elseif low:find("m4") then mainIni.safe.m4 = val
-        elseif low:find("ak") then mainIni.safe.ak = val
-        elseif low:find("rifle") then mainIni.safe.ri = val
+    
+    if low:find("сейф") or low:find("осталось") then
+        local ammo = clean:match(":%s+(%d+)")
+        if ammo then
+            local val = tonumber(ammo)
+            if low:find("deagle") then mainIni.safe.de = val
+            elseif low:find("m4") then mainIni.safe.m4 = val
+            elseif low:find("ak%-47") or (low:find("ak") and not low:find("объявление")) then 
+                mainIni.safe.ak = val
+            elseif low:find("rifle") then mainIni.safe.ri = val
+            end
+            inicfg.save(mainIni, config_path)
         end
-        inicfg.save(mainIni, config_path)
     end
 end
