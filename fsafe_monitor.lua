@@ -1,4 +1,4 @@
-local samp = require 'lib.samp.events'
+ocal samp = require 'lib.samp.events'
 local inicfg = require 'inicfg'
 
 local script_version = 5
@@ -72,28 +72,38 @@ function main()
 end
 
 function checkUpdate()
-    local temp_path = os.getenv("TEMP") .. "\\temp_fsafe.lua"
-    downloadUrlToFile(url_script, temp_path, function(id, status, p1, p2)
+    local download_url = url_script .. "?v=" .. os.time()
+    local temp_path = os.getenv("TEMP") .. "\\temp_fsafe_upd.lua"
+    
+    downloadUrlToFile(download_url, temp_path, function(id, status, p1, p2)
         if status == 6 then
-            local f = io.open(temp_path, "r")
+            local f = io.open(temp_path, "rb")
             if f then
                 local content = f:read("*a")
                 f:close()
+                os.remove(temp_path)
                 
                 local new_version = content:match("local script_version = (%d+)")
-                new_version = tonumber(new_version)
-                
-                if new_version and new_version > script_version then
-                    sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Updating...", -1)
-                    local new_file = io.open(script_path, "w")
-                    if new_file then
-                        new_file:write(content)
-                        new_file:close()
-                        sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated! Reloading...", -1)
-                        thisScript():reload()
+                if new_version then
+                    new_version = tonumber(new_version)
+                    if new_version > script_version then
+                        sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}New version v" .. new_version .. " found! Updating...", -1)
+                        
+                        local script_file = io.open(script_path, "wb")
+                        if script_file then
+                            script_file:write(content)
+                            script_file:close()
+                            
+                            sampAddChatMessage("{7B70FA}[fsafe] {FFFFFF}Updated! Reloading script...", -1)
+                            lua_thread.create(function()
+                                wait(500)
+                                thisScript():reload()
+                            end)
+                        else
+                            sampAddChatMessage("{7B70FA}[fsafe] {FF0000}Update error: {FFFFFF}File is busy.", -1)
+                        end
                     end
                 end
-                os.remove(temp_path)
             end
         end
     end)
