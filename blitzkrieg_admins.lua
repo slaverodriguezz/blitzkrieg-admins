@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("2.9")
+script_version("3.0")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "2.9" 
+local SCRIPT_VERSION = "3.0" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -53,7 +53,9 @@ local admins = {
     ["Jayden_Henderson"] = 5, ["Arteezy_Adalwolff"] = 5, ["Mayson_Wilson"] = 5, ["Denis_MacTavish"] = 5,
     ["Laurent_Lemieux"] = 5, ["Simon_Frolov"] = 5, ["Dimentii_Lazarev"] = 5, ["Sandy_Blum"] = 5, 
     ["Yaroslav_Yarkin"] = 5, ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5, ["Artem_Rosenberg"] = 5, 
-    ["Emmett_Hoggarth"] = 5, ["Kasper_Whiter"] = 3
+    ["Emmett_Hoggarth"] = 5, ["Temik_Attano"] = 1, ["Chapa_Winx"] = 1, ["Calvin_Broadus"] = 1, 
+    ["Rabbit_Tomioka"] = 1, ["Shiro_Mercedez"] = 1, ["Christian_Moon"] = 1, ["Aitesu_Matsumoto"] = 1, 
+    ["William_Bueno"] = 4, ["Nate_River"] = 4, ["Kasper_Whiter"] = 3
 }
 
 function main()
@@ -137,4 +139,5 @@ function cmd_fcadmins()
     local allIds = table.concat(adminIds, ", ")
     sampSendChat("/fc Admins online: " .. allIds)
 end
+
 
