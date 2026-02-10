@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("3.2")
+script_version("3.3")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "3.2" 
+local SCRIPT_VERSION = "3.3" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -44,7 +44,7 @@ local admins = {
     ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8, ["Fernando_Bennet"] = 6,
     ["Egor_Ufimtsev"] = 6, ["Daniel_Salaru"] = 6, ["Wilion_Walker"] = 5, ["Rikuto_Yashida"] = 5,
     ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Niko_Filliams"] = 5,
-    ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 5, ["Midzuki_Cerezo"] = 4,
+    ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 5,
     ["Kwenyt_Joestar"] = 3, ["Absolutely_Sawide"] = 5, ["Oruto_Matsushima"] = 5,
     ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5,
     ["Donatello_Ross"] = 5, ["Cody_Flatcher"] = 5, ["Carlo_Barbero"] = 5, ["Ruslan_Satriano"] = 5,
@@ -55,7 +55,7 @@ local admins = {
     ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5, ["Artem_Rosenberg"] = 5, 
     ["Emmett_Hoggarth"] = 5, ["Temik_Attano"] = 2, ["Chapa_Winx"] = 2, ["Calvin_Broadus"] = 2, 
     ["Rabbit_Tomioka"] = 2, ["Shiro_Mercedez"] = 2, ["Christian_Moon"] = 2, ["Aitesu_Matsumoto"] = 2, 
-    ["William_Bueno"] = 4, ["Nate_River"] = 4, ["Kasper_Whiter"] = 3
+    ["William_Bueno"] = 4, ["Nate_River"] = 4, ["Stefanos_Tsitsipas"] = 1, ["Fudo_Hasegawa"] = 1,  ["Kasper_Whiter"] = 3
 }
 
 function main()
@@ -139,6 +139,7 @@ function cmd_fcadmins()
     local allIds = table.concat(adminIds, ", ")
     sampSendChat("/fc Admins online: " .. allIds)
 end
+
 
 
 
