@@ -1,12 +1,12 @@
 script_name("blitzkrieg admins")
 script_author("slave_rodriguez")
-script_version("3.5")
+script_version("3.6")
 
 require "lib.moonloader"
 local sampev = require "lib.samp.events"
 local requests = require("requests")
 
-local SCRIPT_VERSION = "3.5" 
+local SCRIPT_VERSION = "3.6" 
 local SCRIPT_URL = "https://raw.githubusercontent.com/slaverodriguezz/blitzkrieg-admins/main/blitzkrieg_admins.lua"
 local SCRIPT_PATH = getWorkingDirectory() .. "\\blitzkrieg_admins.lua"
 local textColor = "{F5DEB3}"
@@ -42,22 +42,17 @@ local admins = {
     ["Quentin_Qween"] = 10, ["Jayson_Frenks"] = 10, ["Danya_Korolyov"] = 10, ["Sergo_Cross"] = 10,
     ["Trojan_Dev"] = 10, ["Kostya_Vlasov"] = 10, ["Game_Birds"] = 10, ["Aleksey_Efimenko"] = 7,
     ["Test_Evlv"] = 8, ["Domenick_Jackson"] = 8, ["Fernando_Bennet"] = 6,
-    ["Egor_Ufimtsev"] = 6, ["Daniel_Salaru"] = 6, ["Wilion_Walker"] = 5, ["Rikuto_Yashida"] = 5,
-    ["Aleksei_Kuznetcov"] = 5, ["Anthony_Cerezo"] = 5, ["Niko_Filliams"] = 5,
-    ["Ramon_Morettie"] = 5, ["Alessandro_Carrasco"] = 5,
-    ["Kwenyt_Joestar"] = 4, ["Absolutely_Sawide"] = 5, ["Oruto_Matsushima"] = 5,
-    ["Michael_Rojas"] = 6, ["Marco_Mazzini"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5,
-    ["Donatello_Ross"] = 5, ["Cody_Flatcher"] = 5, ["Carlo_Barbero"] = 5, ["Ruslan_Satriano"] = 5,
-    ["Kennedy_Oldridge"] = 5, ["Andrew_Sheredega"] = 5,
-    ["Faust_Casso"] = 4, ["Yuliya_Ermak"] = 5, ["Mickey_Marryman"] = 5,
-    ["Jayden_Henderson"] = 5, ["Arteezy_Adalwolff"] = 5, ["Mayson_Wilson"] = 5, ["Denis_MacTavish"] = 5,
-    ["Simon_Frolov"] = 5, ["Dimentii_Lazarev"] = 5, ["Sandy_Blum"] = 5, 
-    ["Kira_Yukimura"] = 5, ["Gracie_Ludvig"] = 5, ["Artem_Rosenberg"] = 5, 
-    ["Emmett_Hoggarth"] = 5, ["Temik_Attano"] = 2, ["Chapa_Winx"] = 2, ["Calvin_Broadus"] = 2, 
-    ["Rabbit_Tomioka"] = 2, ["Shiro_Mercedez"] = 2, ["Christian_Moon"] = 2, ["Aitesu_Matsumoto"] = 2, 
-    ["William_Bueno"] = 4, ["Nate_River"] = 4, ["Stefanos_Tsitsipas"] = 1, ["Fudo_Hasegawa"] = 1, 
-    ["Itachi_Kirigaya"] = 1, ["Korone_Plitts"] = 1, ["Christopher_Vazquez"] = 1, ["Dallas_Junior"] = 1, 
-    ["Thomas_Baster"] = 1, ["Salvador_Damini"] = 1, ["Jack_Gastro"] = 4
+    ["Egor_Ufimtsev"] = 6, ["Wilion_Walker"] = 5, ["Cody_Fletcher"] = 5, 
+    ["Aleksei_Kuznetcov"] = 5, ["Carlo_Barbero"] = 5, ["Emmett_Hoggarth"] = 5, ["Impressive_Plitts"] = 5, 
+    ["Gracie_Ludvig"] = 5, ["Kira_Yukimura"] = 5, ["Rikuto_Yashida"] = 5, ["Ramon_Morettie"] = 5, 
+    ["Sandy_Blum"] = 5, ["Edward_Thawne"] = 5, ["Mayu_Sakura"] = 5, ["Jayden_Henderson"] = 5, 
+    ["Marco_Mazzini"] = 5, ["Yuliya_Ermak"] = 5, ["Faust_Casso"] = 5, ["Christian_Moon"] = 5, 
+    ["Aitesu_Matsumoto"] = 5, ["Willka_Plitts"] = 5, ["Nate_River"] = 5, ["Sara_Chelsey"] = 5, 
+    ["Fudo_Hasegawa"] = 5, ["Thomas_Basters"] = 4, ["Vadim_Kudo"] = 4, ["Sashenka_Yakovlev"] = 4, 
+    ["Danya_Karpin"] = 5, ["Scandal_Benedict"] = 4, ["Hideo_Kadzima"] = 4, ["Marius_Kronberger"] = 4, 
+    ["Dmitriy_Renaisssance"] = 4, ["Nicolas_Himbers"] = 4, ["Christopher_Juarez"] = 3, ["Nikitos_Suvorov"] = 2, 
+    ["Camel_Plitts"] = 2, ["Bartolo_Correnti"] = 2, ["Franco_Furry"] = 2, ["Screamo_Meow"] = 2, 
+    ["Ruslan_Shagenov"] = 2, ["Brady_Tracey"] = 2, ["Kery_Gagarin"] = 2, ["Inti_Kion"] = 2,
 }
 
 function main()
